@@ -4,11 +4,13 @@
 #include <array>
 #include <iostream>
 #include <unordered_map>
+#include <stack>
+
 using soduko = std::array<int, 81>;
 
 auto row_is_valid(const int row, const soduko& puzzel) -> bool {
     std::array<bool, 10> found{};
-    for (size_t i = 0; i < 9; i++) {
+    for (int i = 0; i < 9; i++) {
         auto value = puzzel[i + row * 9];
         std::cout << value << " ";
         if (value != 0) {
@@ -24,7 +26,7 @@ auto row_is_valid(const int row, const soduko& puzzel) -> bool {
 
 auto col_is_valid(const int row, const soduko& puzzel) -> bool {
     std::array<bool, 10> found{};
-    for (size_t i = 0; i < 9; i++) {
+    for (int i = 0; i < 9; i++) {
         auto value = puzzel[i * 9 + row];
         std::cout << value << " ";
         if (value != 0) {
@@ -49,8 +51,8 @@ auto box_is_valid(const int box_x, const int box_y, const soduko& puzzel) -> boo
     const int start_y = box_y * 3;
 
     std::array<bool, 10> found{};
-    for (size_t y = start_y; y < start_y + 3; y++) {
-        for (size_t x = start_x; x < start_x + 3; x++) {
+    for (int y = start_y; y < start_y + 3; y++) {
+        for (int x = start_x; x < start_x + 3; x++) {
             auto value = puzzel[x + (y * 9)];
             if (value != 0) {
                 if (found[value] == true) {
@@ -66,14 +68,14 @@ auto box_is_valid(const int box_x, const int box_y, const soduko& puzzel) -> boo
 }
 
 auto is_valid(const soduko& puzzel) -> bool {
-    for (size_t i = 0; i < 9; i++) {
+    for (int i = 0; i < 9; i++) {
         if (!col_is_valid(i, puzzel) || !row_is_valid(i, puzzel)) {
             return false;
         }
     }
 
-    for (size_t x = 0; x < 3; x++) {
-        for (size_t y = 0; y < 3; y++) {
+    for (int x = 0; x < 3; x++) {
+        for (int y = 0; y < 3; y++) {
             if (!box_is_valid(x, y, puzzel)) {
                 return false;
             }
@@ -81,6 +83,32 @@ auto is_valid(const soduko& puzzel) -> bool {
     }
 
     return true;
+}
+
+struct puzzel_value_t {
+    int x{};
+    int y{};
+    int value{};
+};
+
+auto solve(soduko puzzel) -> soduko { //very unfinshed
+    std::stack<puzzel_value_t> stack{};
+
+    for (int y = 0; y < 9; y++) {
+        for (int x = 0; x < 9; x++) {
+            auto& target = puzzel[x + (y * 9)];
+            if (target != 0) {
+                continue;            
+            }
+
+            for (int i = 1; i < 10; i++) {
+                target = i;
+                if (is_valid(puzzel)) {
+                    stack.push({x, y, i});
+                }
+            }        
+        }
+    }
 }
 
 int main() {
