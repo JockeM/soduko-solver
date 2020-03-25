@@ -13,14 +13,12 @@ auto row_is_valid(const int row, const soduko& puzzel) -> bool {
         std::cout << value << " ";
         if (value != 0) {
             if (found[value] == true) {
-                std::cout << "\n";
                 return false;
             } else {
                 found[value] = true;
             }
         }
     }
-    std::cout << "\n";
     return true;
 }
 
@@ -31,14 +29,13 @@ auto col_is_valid(const int row, const soduko& puzzel) -> bool {
         std::cout << value << " ";
         if (value != 0) {
             if (found[value] == true) {
-                std::cout << "\n";
                 return false;
             } else {
                 found[value] = true;
             }
         }
     }
-    std::cout << "\n";
+
     return true;
 }
 /// 0 1 2
@@ -55,10 +52,8 @@ auto box_is_valid(const int box_x, const int box_y, const soduko& puzzel) -> boo
     for (size_t y = start_y; y < start_y + 3; y++) {
         for (size_t x = start_x; x < start_x + 3; x++) {
             auto value = puzzel[x + (y * 9)];
-            std::cout << value << " ";
             if (value != 0) {
                 if (found[value] == true) {
-                    std::cout << "\n";
                     return false;
                 } else {
                     found[value] = true;
@@ -67,7 +62,6 @@ auto box_is_valid(const int box_x, const int box_y, const soduko& puzzel) -> boo
         }
     }
 
-    std::cout << "\n";
     return true;
 }
 
