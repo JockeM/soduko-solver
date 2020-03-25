@@ -6,60 +6,86 @@
 #include <unordered_map>
 using soduko = std::array<int, 81>;
 
-auto row_is_valid(int row, const soduko& puzzel) -> bool {
+auto row_is_valid(const int row, const soduko& puzzel) -> bool {
     std::array<bool, 10> found{};
     for (size_t i = 0; i < 9; i++) {
         auto value = puzzel[i + row * 9];
         std::cout << value << " ";
         if (value != 0) {
             if (found[value] == true) {
+                std::cout << "\n";
                 return false;
             } else {
                 found[value] = true;
             }
         }
     }
-
+    std::cout << "\n";
     return true;
 }
 
-auto col_is_valid(int row, const soduko& puzzel) -> bool {
+auto col_is_valid(const int row, const soduko& puzzel) -> bool {
     std::array<bool, 10> found{};
     for (size_t i = 0; i < 9; i++) {
         auto value = puzzel[i * 9 + row];
         std::cout << value << " ";
         if (value != 0) {
             if (found[value] == true) {
+                std::cout << "\n";
                 return false;
             } else {
                 found[value] = true;
             }
         }
     }
-
+    std::cout << "\n";
     return true;
 }
+/// 0 1 2
+///
+/// 0
+/// 1
+/// 2
 
-auto box_is_valid(int x, int y, const soduko& puzzel) -> bool {
+auto box_is_valid(const int box_x, const int box_y, const soduko& puzzel) -> bool {
+    const int start_x = box_x * 3;
+    const int start_y = box_y * 3;
+
     std::array<bool, 10> found{};
-    for (size_t i = 0; i < 9; i++) {
-
-        int x_s = i % 3;
-        int y_s = auto value = puzzel[i * 9 + row];
-        std::cout << value << " ";
-        if (value != 0) {
-            if (found[value] == true) {
-                return false;
-            } else {
-                found[value] = true;
+    for (size_t y = start_y; y < start_y + 3; y++) {
+        for (size_t x = start_x; x < start_x + 3; x++) {
+            auto value = puzzel[x + (y * 9)];
+            std::cout << value << " ";
+            if (value != 0) {
+                if (found[value] == true) {
+                    std::cout << "\n";
+                    return false;
+                } else {
+                    found[value] = true;
+                }
             }
         }
     }
 
+    std::cout << "\n";
     return true;
 }
 
 auto is_valid(const soduko& puzzel) -> bool {
+    for (size_t i = 0; i < 9; i++) {
+        if (!col_is_valid(i, puzzel) || !row_is_valid(i, puzzel)) {
+            return false;
+        }
+    }
+
+    for (size_t x = 0; x < 3; x++) {
+        for (size_t y = 0; y < 3; y++) {
+            if (!box_is_valid(x, y, puzzel)) {
+                return false;
+            }
+        }
+    }
+
     return true;
 }
 
@@ -77,11 +103,10 @@ int main() {
         4, 0, 9, 0, 1, 6, 3, 0, 0};
     // clang-format on
 
-    std::cout << row_is_valid(0, puzzel) << "\n";
-    std::cout << col_is_valid(0, puzzel) << "\n";
-
     if (is_valid(puzzel)) {
-        return EXIT_SUCCESS;
+        std::cout << "is valid";
+    } else {
+        std::cout << "is not valid";
     }
 
     return EXIT_FAILURE;
